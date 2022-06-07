@@ -60,7 +60,7 @@ void MainWindow::on_toolButton_clicked()
 void MainWindow::on_toolButton_4_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
-    temptimer->stop();
+    //temptimer->stop();
 
 }
 
@@ -421,7 +421,7 @@ void MainWindow::read_heater()
     //Print out what the Arduino is sending...
     //qDebug() << "Arduino Says: " << str.mid(0,2);
     ui->label_17->setText(list[0]);
-
+    //qDebug()<<list[0];
 
 }
 
@@ -760,7 +760,7 @@ void MainWindow::on_toolButton_16_clicked()
 void MainWindow::on_toolButton_17_clicked()
 {
     ui->stackedWidget->setCurrentIndex(7);
-    temptimer->stop();
+    //temptimer->stop();
 }
 
 void MainWindow::on_pushButton_5_clicked()
@@ -1483,6 +1483,7 @@ void MainWindow::on_toolButton_28_clicked()
     ui->toolButton_4->setDisabled(false);
     ui->toolButton_17->setDisabled(false);
     ui->toolButton_28->setDisabled(false);
+    ui->stackedWidget->setCurrentIndex(11);
 }
 
 void MainWindow::on_toolButton_29_clicked()
