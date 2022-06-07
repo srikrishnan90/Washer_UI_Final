@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>close.png</file>
+        <file>home.png</file>
+        <file>anim.gif</file>
+        <file>loader.gif</file>
+        <file>ctk_icon.png</file>
+        <file>settings.png</file>
+    </qresource>
+</RCC>
