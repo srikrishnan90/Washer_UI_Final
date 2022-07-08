@@ -189,7 +189,7 @@ void MainWindow::processing()
         }
         else
         {
-            data="ini";
+            data="inf";
             ui->label_13->setText("Homing...");
             write_motor(data);
             ui->stackedWidget->setCurrentIndex(0);
@@ -259,7 +259,7 @@ void MainWindow::processing()
         }
         else
         {
-            data="ini";
+            data="inf";
             ui->label_13->setText("Homing...");
             write_motor(data);
             ui->stackedWidget->setCurrentIndex(0);
@@ -435,8 +435,10 @@ void MainWindow::read_sensor()
     QString str=receive;
     QStringList list;
     list=str.split(" ");
-    wplg_stat=list[1].toInt();
-    wsen_stat=list[2].toInt();
+    wplg_stat=list[2].toInt();
+    wsen_stat=list[4].toInt();
+    qDebug()<<str<<" "<<wplg_stat<<"  "<<wsen_stat;
+    qDebug()<<list[0]<<" "<<list[1]<<" "<<list[2]<<" "<<list[3]<<" "<<list[4];
 }
 
 void MainWindow::on_toolButton_2_clicked()
