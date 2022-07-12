@@ -18,7 +18,7 @@ static int wplg_stat=0;
 static int wsen_stat=0;
 static int sen_war=0;
 static int clicks=0;
-
+static int stop_stat_proc=0;
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -184,8 +184,52 @@ void MainWindow::processing()
         }
         if(stop_stat==1)
         {
-            stop_stat=0;
-            ui->stackedWidget->setCurrentIndex(0);
+            Pi2c arduino(7);
+            QMessageBox msgBox;
+            if(stop_stat_proc==1)
+            {
+                stop_stat=0;
+                stop_stat_proc=0;
+                ui->stackedWidget->setCurrentIndex(0);
+            }
+            else
+            {
+                while(true)
+                {
+                    QApplication::processEvents();
+                    QThread::msleep(100);
+                    msgBox.setWindowTitle("Warning...");
+                    msgBox.setText("Are you sure to Stop Washing.");
+                    msgBox.setStandardButtons(msgBox.Yes);
+                    msgBox.addButton(msgBox.Cancel);
+                    msgBox.setStyleSheet("QLabel{min-width:500 px; font-size: 24px;} QPushButton{ width:200px; height:50px; font-size: 18px; }");
+                    if(msgBox.exec() == msgBox.Yes)
+                    {
+                        QString data="stp";
+                        char* ch;
+                        QByteArray ba=data.toLatin1();
+                        ch=ba.data();
+                        QThread::msleep(100);
+                        arduino.i2cWrite(ch,30);
+                        QThread::msleep(100);
+                        qDebug()<<ch;
+                        stop_stat=0;
+                        stop_stat_proc=0;
+                        ui->stackedWidget->setCurrentIndex(0);
+                        break;
+                    }
+                    else if(msgBox.exec() == msgBox.Cancel)
+                    {
+                        stop_stat=0;
+                        stop_stat_proc=0;
+                        ui->toolButton_9->setVisible(true);
+                        ui->toolButton_4->hide();
+                        ui->toolButton_17->hide();
+                        break;
+                    }
+
+                }
+            }
         }
         else
         {
@@ -254,8 +298,52 @@ void MainWindow::processing()
         }
         if(stop_stat==1)
         {
-            stop_stat=0;
-            ui->stackedWidget->setCurrentIndex(0);
+            Pi2c arduino(7);
+            QMessageBox msgBox;
+            if(stop_stat_proc==1)
+            {
+                stop_stat=0;
+                stop_stat_proc=0;
+                ui->stackedWidget->setCurrentIndex(0);
+            }
+            else
+            {
+                while(true)
+                {
+                    QApplication::processEvents();
+                    QThread::msleep(100);
+                    msgBox.setWindowTitle("Warning...");
+                    msgBox.setText("Are you sure to Stop Washing.");
+                    msgBox.setStandardButtons(msgBox.Yes);
+                    msgBox.addButton(msgBox.Cancel);
+                    msgBox.setStyleSheet("QLabel{min-width:500 px; font-size: 24px;} QPushButton{ width:200px; height:50px; font-size: 18px; }");
+                    if(msgBox.exec() == msgBox.Yes)
+                    {
+                        QString data="stp";
+                        char* ch;
+                        QByteArray ba=data.toLatin1();
+                        ch=ba.data();
+                        QThread::msleep(100);
+                        arduino.i2cWrite(ch,30);
+                        QThread::msleep(100);
+                        qDebug()<<ch;
+                        stop_stat=0;
+                        stop_stat_proc=0;
+                        ui->stackedWidget->setCurrentIndex(0);
+                        break;
+                    }
+                    else if(msgBox.exec() == msgBox.Cancel)
+                    {
+                        stop_stat=0;
+                        stop_stat_proc=0;
+                        ui->toolButton_9->setVisible(true);
+                        ui->toolButton_4->hide();
+                        ui->toolButton_17->hide();
+                        break;
+                    }
+
+                }
+            }
         }
         else
         {
@@ -351,6 +439,7 @@ void MainWindow::write_motor(QString val)
                 if(msgBox.exec() == msgBox.Yes)
                 {
                     stop_stat=1;
+                    stop_stat_proc=1;
                     QString data="stp";
                     char* ch;
                     QByteArray ba=data.toLatin1();
