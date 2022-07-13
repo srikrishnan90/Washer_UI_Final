@@ -19,6 +19,8 @@ static int wsen_stat=0;
 static int sen_war=0;
 static int clicks=0;
 static int stop_stat_proc=0;
+static int vpump=0;
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -121,6 +123,7 @@ void MainWindow::on_toolButton_6_clicked()
     wash_times=ui->listWidget_4->currentRow();
     pump_speed=ui->lineEdit_10->text().toInt();
     soak_times=ui->lineEdit_13->text().toInt();
+   vpump=ui->comboBox_2->currentIndex();
 
     processing();
 
@@ -165,12 +168,12 @@ void MainWindow::processing()
                             move_pos=current_pos-previous_pos;
                             if(i==wash_times+1)
                             {
-                                data="mof "+QString::number(move_pos)+" "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed);
+                                data="mof "+QString::number(move_pos)+" "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed)+" "+QString::number(vpump);
                                 text="Final Aspiration of strip "+QString::number(j+1);
                             }
                             else
                             {
-                                data="mov "+QString::number(move_pos)+" "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed);
+                                data="mov "+QString::number(move_pos)+" "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed)+" "+QString::number(vpump);
                                 text="Washing strip "+QString::number(j+1)+" of "+QString::number(i+1)+"/"+QString::number(wash_times+1)+" times";
                             }
                             ui->label_13->setText(text);
@@ -268,7 +271,7 @@ void MainWindow::processing()
                         {
                             if(i==0)
                             {
-                                data="mov "+QString::number(move_pos)+" "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed);
+                                data="mov "+QString::number(move_pos)+" "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed)+" "+QString::number(vpump);
                                 text="Washing strip "+QString::number(j+1)+" of "+QString::number(i+1)+"/"+QString::number(wash_times+1)+" times";
                             }
                             else
@@ -278,12 +281,12 @@ void MainWindow::processing()
                                 write_motor(data);
                                 if(i==wash_times+1)
                                 {
-                                    data="mof 0 "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed);
+                                    data="mof 0 "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed)+" "+QString::number(vpump);
                                     text="Final Aspiration of strip  "+QString::number(j+1);
                                 }
                                 else
                                 {
-                                    data="mov 0 "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed);
+                                    data="mov 0 "+QString::number(wash_volume)+" "+QString::number(wash_option)+" "+QString::number(pump_speed)+" "+QString::number(vpump);
                                     text="Washing strip "+QString::number(j+1)+" of "+QString::number(i+1)+"/"+QString::number(wash_times+1)+" times";
                                 }
                             }
@@ -1328,7 +1331,7 @@ void MainWindow::on_pushButton_112_clicked()
 void MainWindow::on_toolButton_19_clicked()
 {
     QString line;
-    QString lines[7];
+    QString lines[8];
     int n=0;
     ui->stackedWidget->setCurrentIndex(9);
     QFile file("/home/pi/support/settings.txt");
@@ -1355,7 +1358,7 @@ void MainWindow::on_toolButton_19_clicked()
 void MainWindow::on_toolButton_20_clicked()
 {
     QString line;
-    QString lines[7];
+    QString lines[8];
     int n=0;
     ui->stackedWidget->setCurrentIndex(10);
     QFile file("/home/pi/support/settings.txt");
@@ -1435,7 +1438,7 @@ void MainWindow::on_pushButton_13_clicked()
 void MainWindow::save(int num, QString val)
 {
     QString line;
-    QString lines[7];
+    QString lines[8];
     int n=0;
     ui->stackedWidget->setCurrentIndex(10);
     QFile file("/home/pi/support/settings.txt");
@@ -1453,7 +1456,7 @@ void MainWindow::save(int num, QString val)
     if(file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
 
-        for(int i=0;i<7;i++)
+        for(int i=0;i<8;i++)
         {
             if(i==num)
                 stream<<val+"\n";
@@ -1469,7 +1472,7 @@ void MainWindow::save(int num, QString val)
 void MainWindow::init_load_set()
 {
     QString line;
-    QString lines[7];
+    QString lines[8];
     int n=0;
     QFile file("/home/pi/support/settings.txt");
     if(file.open(QIODevice::ReadOnly|QIODevice::Text))
@@ -1493,6 +1496,7 @@ void MainWindow::init_load_set()
     ui->lineEdit_12->setText(lines[4]);
     ui->lineEdit_11->setText(lines[5]);
     ui->lineEdit_14->setText(lines[6]);
+    ui->comboBox_2->setCurrentIndex(lines[7].toInt());
 }
 
 void MainWindow::on_toolButton_21_clicked()
@@ -1582,4 +1586,11 @@ void MainWindow::on_toolButton_29_clicked()
     clicks+=1;
     if(clicks==3)
         qApp->exit();
+}
+
+void MainWindow::on_toolButton_30_clicked()
+{
+    QString s = QString::number(ui->comboBox_2->currentIndex());
+    save(7,s);
+    ui->stackedWidget->setCurrentIndex(7);
 }
