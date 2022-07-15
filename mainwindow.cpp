@@ -371,6 +371,7 @@ void MainWindow::write_motor(QString val)
     movie->start();
     qDebug()<<val;
     QMessageBox msgBox;
+    Pi2c arduino(7);
     //if(!(strncmp(val,"ini",3)==0 || strncmp(val,"buz",3)==0 || strncmp(val,"stp",3)==0 ||strncmp(val,"shk",3)==0)) //if(val!="ini")
     if(!(val.left(3)=="ini"||val.left(3)=="buz"||val.left(3)=="stp"||val.left(3)=="shk"))
     {
@@ -399,6 +400,14 @@ void MainWindow::write_motor(QString val)
                 {
                     qDebug()<<"in else";
                     stop_stat=1;
+                    stop_stat_proc=1;
+                    QString data="stp";
+                    char* ch;
+                    QByteArray ba=data.toLatin1();
+                    ch=ba.data();
+                    QThread::msleep(100);
+                    arduino.i2cWrite(ch,30);
+                    QThread::msleep(100);
                     break;
                 }
 
@@ -420,7 +429,6 @@ void MainWindow::write_motor(QString val)
     }
     if(stop_stat==0)
     {
-        Pi2c arduino(7);
         QString data=val;
         char* ch;
         QByteArray ba=data.toLatin1();
